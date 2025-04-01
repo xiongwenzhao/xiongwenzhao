@@ -1,5 +1,45 @@
 auto.waitFor();
-randomSwipe(500,1000,500,1000)
+// 任务队列
+let taskQueue = [];
+
+// 添加任务到队列
+function addTask(taskFunction, executeTime) {
+    taskQueue.push({ taskFunction, executeTime });
+    taskQueue.sort((a, b) => a.executeTime - b.executeTime); // 按时间排序
+}
+
+// 检查并执行任务
+function processTasks() {
+    let now = new Date().getTime();
+    while (taskQueue.length > 0 && taskQueue[0].executeTime <= now) {
+        let task = taskQueue.shift(); // 取出队列中的第一个任务
+        try {
+            task.taskFunction(); // 执行任务
+        } catch (error) {
+            console.error("任务执行失败:", error);
+        }
+    }
+}
+
+// 定时器定期检查任务队列
+setInterval(processTasks, 1000);
+
+// 示例：添加任务
+addTask(() => {
+    console.log("任务1执行时间:", new Date());
+    randomSwipe(100, 200, 300, 400);
+}, new Date().getTime() + 5000); // 5秒后执行
+
+addTask(() => {
+    console.log("任务2执行时间:", new Date());
+    randomSwipe(400, 500, 600, 700);
+}, new Date().getTime() + 10000); // 10秒后执行
+// // 设置屏幕分辨率
+// var width = device.width;
+// var height = device.height;
+// setScreenMetrics(width, height)
+// // 设置滑动时长范围
+// randomSwipe(500,1000,500,1000)
 
 /**
  * 四点生成贝塞尔曲线
@@ -65,29 +105,26 @@ function randomSwipe(sx,sy,ex,ey){
     //设置控制点极限距离
     var leaveHeightLength=500
     
-    if(Math.abs(ex-sx)>Math.abs(ey-sy)){
-        var my=(sy+ey)/2
-        var y2=my+random(0,leaveHeightLength)
-        var y3=my-random(0,leaveHeightLength)
-    
-        var lx=(sx-ex)/3
-        if(lx<0){lx=-lx}
-        var x2=sx+lx/2+random(0,lx)
-        var x3=sx+lx+lx/2+random(0,lx)
-    }else{
-        var mx=(sx+ex)/2
-        var y2=mx+random(0,leaveHeightLength)
-        var y3=mx-random(0,leaveHeightLength)
+    if (Math.abs(ex - sx) > Math.abs(ey - sy)) {
+        var my = (sy + ey) / 2;
+        var y2 = my + random(0, leaveHeightLength);
+        var y3 = my - random(0, leaveHeightLength);
 
-        var ly=(sy-ey)/3
-        if(ly<0){ly=-ly}
-        var y2=sy+ly/2+random(0,ly)
-        var y3=sx+ly+ly/2+random(0,ly)
+        var lx = Math.abs((sx - ex) / 3);
+        var x2 = sx + lx / 2 + random(0, lx);
+        var x3 = sx + lx + lx / 2 + random(0, lx);
+    } else {
+        var mx = (sx + ex) / 2;
+        var x2 = mx + random(0, leaveHeightLength);
+        var x3 = mx - random(0, leaveHeightLength);
+
+        var ly = Math.abs((sy - ey) / 3);
+        var y2 = sy + ly / 2 + random(0, ly);
+        var y3 = sy + ly + ly / 2 + random(0, ly);
     }
 
     var time=[0,random(timeMin,timeMax)]
     var track=bezierCreate(sx,sy,x2,y2,x3,y3,ex,ey)
-    console.log("起点坐标："+track)
     log("控制点A坐标："+x2+","+y2)
     log("控制点B坐标："+x3+","+y3)
     log("滑动时长："+time[1])
