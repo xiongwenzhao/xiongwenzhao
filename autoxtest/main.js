@@ -1,4 +1,12 @@
 auto.waitFor();
+// 设置屏幕分辨率
+var width = device.width;
+var height = device.height;
+ //设置随机滑动时长范围
+ var timeMin=1000
+ var timeMax=3000
+log("屏幕宽度: " + width + ", 屏幕高度: " + height);
+setScreenMetrics(width, height)
 // 任务队列
 let taskQueue = [];
 
@@ -26,20 +34,17 @@ setInterval(processTasks, 1000);
 
 // 示例：添加任务
 addTask(() => {
-    console.log("任务1执行时间:", new Date());
     randomSwipe(100, 200, 300, 400);
 }, new Date().getTime() + 5000); // 5秒后执行
 
 addTask(() => {
-    console.log("任务2执行时间:", new Date());
     randomSwipe(400, 500, 600, 700);
 }, new Date().getTime() + 10000); // 10秒后执行
-// // 设置屏幕分辨率
-// var width = device.width;
-// var height = device.height;
-// setScreenMetrics(width, height)
-// // 设置滑动时长范围
-// randomSwipe(500,1000,500,1000)
+
+addTask(() => {
+    
+    text("Chrome").findOne(1000).click();
+}, new Date().getTime() + 1); // 10秒后执行
 
 /**
  * 四点生成贝塞尔曲线
@@ -99,9 +104,7 @@ function bezierCreate(x1,y1,x2,y2,x3,y3,x4,y4){
  * 效果：模拟真人滑动
  */
 function randomSwipe(sx,sy,ex,ey){
-    //设置随机滑动时长范围
-    var timeMin=1000
-    var timeMax=3000
+   
     //设置控制点极限距离
     var leaveHeightLength=500
     
@@ -125,9 +128,6 @@ function randomSwipe(sx,sy,ex,ey){
 
     var time=[0,random(timeMin,timeMax)]
     var track=bezierCreate(sx,sy,x2,y2,x3,y3,ex,ey)
-    log("控制点A坐标："+x2+","+y2)
-    log("控制点B坐标："+x3+","+y3)
-    log("滑动时长："+time[1])
-    
+    log("滑动:", new Date()+"控制点A坐标："+x2+","+y2+"控制点B坐标："+x3+","+y3+"滑动时长："+time[1])
     gestures(time.concat(track))
 }
