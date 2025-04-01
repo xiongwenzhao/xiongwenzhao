@@ -41,7 +41,7 @@ setInterval(processTasks, 1000);
 // 示例：添加任务
 addTask(() => {
     // restart("MT管理器");
-    swipe(false);
+    swipevideo(false);
 }, new Date().getTime() + 1); // 5秒后执行
 
 // addTask(() => {
@@ -52,8 +52,36 @@ addTask(() => {
 //     text("Chrome").findOne(1000).click();
 // }, new Date().getTime() + 1); // 10秒后执行
 
+// 模拟对视频不感兴趣连续滑动多次
+function simulateDislikeSwipes(durationInSeconds) {
+    let startTime = new Date().getTime();
+    let durationInMillis = durationInSeconds * 1000;
 
-function swipe(b){
+    for (let i = 0; i < 1000; i++) {
+        let delay = random(3000, 25000); // 随机等待时间 500ms 到 1500ms
+        setTimeout(() => {
+            let currentTime = new Date().getTime();
+            if (currentTime - startTime >= durationInMillis) {
+                log("已达到指定持续时间，停止滑动");
+                return;
+            }
+
+            if (Math.random() < 0.5&&delay<5000) { // 20% 概率返回上一个视频
+                swipevideo(false); 
+                log(`第 ${i + 1} 次上滑完成，等待 ${delay} 毫秒`);
+            } else {
+                swipevideo(true); 
+                log(`第 ${i + 1} 次滑动：`+ `，等待 ${delay} 毫秒`);
+            }
+        }, delay * i);
+    }
+}
+
+
+
+
+
+function swipevideo(b){
     let x1 = width/2+random(0, width/3);
     let x2 = width/2+random(0, width/3);
     let y1;
@@ -190,6 +218,5 @@ function randomSwipe(sx,sy,ex,ey){
 
     var time=[0,random(timeMin,timeMax)]
     var track=bezierCreate(sx,sy,x2,y2,x3,y3,ex,ey)
-    log("滑动:", new Date()+"Start坐标："+sx+","+sy+"end坐标："+ex+","+ey+"滑动时长："+time[1])
     gestures(time.concat(track))
 }
