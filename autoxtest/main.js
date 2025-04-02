@@ -1,3 +1,4 @@
+auto.waitFor();
 // 设置屏幕分辨率
 var width = device.width;
 var height = device.height;
