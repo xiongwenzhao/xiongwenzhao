@@ -79,7 +79,7 @@ function simulateDislikeSwipes(durationInSeconds) {
     }
 }
 
-// 签到领今日奖励
+
 /**
  * 查找并点击领今日奖励按钮的函数
  * 此函数尝试在屏幕上查找包含“领今日奖励”文本的按钮，并点击它。
