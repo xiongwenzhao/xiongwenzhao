@@ -52,28 +52,7 @@ addTask(() => {
 //     text("Chrome").findOne(1000).click();
 // }, new Date().getTime() + 1); // 10秒后执行
 
-// 看广告
-/**
- * 查找并点击广告按钮的函数
- * 此函数尝试在屏幕上查找包含“广告”文本的按钮，并点击它。
- * 如果找到按钮，则点击并记录日志；如果未找到，则记录未找到的日志。
- * 
- * @returns {void}
- */
-function watchAd() {
-    // 查找包含"广告"的文本，设置超时时间为1000毫秒
-    let adButton = textContains("广告").findOne(1000); 
-    // 检查是否找到了广告按钮
-    if (adButton) {
-        // 若找到广告按钮，则点击该按钮
-        adButton.click(); 
-        // 记录已点击广告按钮的日志
-        log("已点击广告按钮"); 
-    } else {
-        // 若未找到广告按钮，记录未找到的日志
-        log("未找到广告按钮"); 
-    }
-}
+
 
 // 模拟对视频不感兴趣连续滑动多次
 function simulateDislikeSwipes(durationInSeconds) {
