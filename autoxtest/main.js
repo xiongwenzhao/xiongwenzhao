@@ -52,13 +52,36 @@ addTask(() => {
 //     text("Chrome").findOne(1000).click();
 // }, new Date().getTime() + 1); // 10秒后执行
 
+// 看广告
+/**
+ * 查找并点击广告按钮的函数
+ * 此函数尝试在屏幕上查找包含“广告”文本的按钮，并点击它。
+ * 如果找到按钮，则点击并记录日志；如果未找到，则记录未找到的日志。
+ * 
+ * @returns {void}
+ */
+function watchAd() {
+    // 查找包含"广告"的文本，设置超时时间为1000毫秒
+    let adButton = textContains("广告").findOne(1000); 
+    // 检查是否找到了广告按钮
+    if (adButton) {
+        // 若找到广告按钮，则点击该按钮
+        adButton.click(); 
+        // 记录已点击广告按钮的日志
+        log("已点击广告按钮"); 
+    } else {
+        // 若未找到广告按钮，记录未找到的日志
+        log("未找到广告按钮"); 
+    }
+}
+
 // 模拟对视频不感兴趣连续滑动多次
 function simulateDislikeSwipes(durationInSeconds) {
     let startTime = new Date().getTime();
     let durationInMillis = durationInSeconds * 1000;
 
     for (let i = 0; i < 1000; i++) {
-        let delay = random(3000, 25000); // 随机等待时间 500ms 到 1500ms
+        let delay = random(3000, 25000); // 随机延迟时间
         setTimeout(() => {
             let currentTime = new Date().getTime();
             if (currentTime - startTime >= durationInMillis) {
@@ -77,8 +100,28 @@ function simulateDislikeSwipes(durationInSeconds) {
     }
 }
 
-
-
+// 签到领今日奖励
+/**
+ * 查找并点击领今日奖励按钮的函数
+ * 此函数尝试在屏幕上查找包含“领今日奖励”文本的按钮，并点击它。
+ * 如果找到按钮，则点击并记录日志；如果未找到，则记录未找到的日志。
+ * 
+ * @returns {void}
+ */
+function signIn() {
+    // 查找包含"领今日奖励"的文本，设置超时时间为1000毫秒
+    let signInButton = textContains("领今日奖励").findOne(1000); 
+    // 检查是否找到了签到按钮
+    if (signInButton) {
+        // 若找到签到按钮，则点击该按钮
+        signInButton.click(); 
+        // 记录已点击签到按钮的日志
+        log("已点击领今日奖励按钮"); 
+    } else {
+        // 若未找到签到按钮，记录未找到的日志
+        log("未找到领今日奖励按钮"); 
+    }
+}
 
 
 function swipevideo(b){
