@@ -9,7 +9,7 @@ var height = device.height;
  var leaveHeightLength=100
 
 log("屏幕宽度: " + width + ", 屏幕高度: " + height);
-setScreenMetrics(width, height)
+setScreenMetrics(width, height);
 // 任务队列
 let taskQueue = [];
 
