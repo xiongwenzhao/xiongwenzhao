@@ -1,4 +1,5 @@
 auto.waitFor();
+console.show(true);
 // 设置屏幕分辨率
 var width = device.width;
 var height = device.height;
@@ -7,7 +8,9 @@ var height = device.height;
  var timeMax=1000
  //设置控制点极限距离
  var leaveHeightLength=100
-
+//console.info
+//console.warn
+//console.error
 log("屏幕宽度: " + width + ", 屏幕高度: " + height);
 setScreenMetrics(width, height);
 // 任务队列
@@ -35,14 +38,12 @@ function processTasks() {
 // 定时器定期检查任务队列
 setInterval(processTasks, 1000);
 
-
-
-
 // 示例：添加任务
 addTask(() => {
     // restart("MT管理器");
-    swipevideo(false);
-}, new Date().getTime() + 1); // 5秒后执行
+    // swipevideo(false);
+
+}, new Date().getTime() + 1); // 1秒后执行
 
 // addTask(() => {
 //     randomSwipe(400, 500, 600, 700);
@@ -52,7 +53,78 @@ addTask(() => {
 //     text("Chrome").findOne(1000).click();
 // }, new Date().getTime() + 1); // 10秒后执行
 
+// 看广告流程
+function watchAds() {
+    while (true) {
+        // 点击看广告按钮
+        let watchAdButton = textContains("看广告").findOne(1000);
+        if (watchAdButton) {
+            watchAdButton.click();
+            log("已点击看广告按钮");
+        } else {
+            log("未找到看广告按钮");
+            break;
+        }
 
+        // 等待广告播放完成
+        let adDuration = random(33000, 40000); // 随机等待33~40秒
+        log(`等待广告播放完成，时长: ${adDuration} 毫秒`);
+        sleep(adDuration);
+
+        // 按键返回
+        back();
+        log("已按返回键");
+
+        // 检查是否有继续观看按钮
+        let continueButton = textContains("继续观看").findOne(2000);
+        if (continueButton) {
+            continueButton.click();
+            log("已点击继续观看按钮");
+        } else {
+            log("未找到继续观看按钮，结束广告流程");
+            break;
+        }
+    }
+}
+
+/**
+ * 返回首页函数
+ * 
+ * 判断当前运行页面是否在指定软件内，如果在则循环后退直至找到“首页”并点击；
+ * 如果不在，则调用重启函数重启软件并点击“首页”。
+ * 
+ * @param {string} appName - 软件名称
+ */
+function returnToHome(appName) {
+    let packageName = app.getPackageName(appName);
+
+    if (currentPackage() === packageName) {
+        log("当前在指定软件内，尝试返回首页...");
+        while (true) {
+            let homeButton = textContains("首页").findOne(1000);
+            if (homeButton) {
+                homeButton.click();
+                log("已点击首页按钮");
+                break;
+            } else {
+                log("未找到首页按钮，尝试后退...");
+                back();
+                sleep(1000);
+            }
+        }
+    } else {
+        log("当前不在指定软件内，重启软件...");
+        restart(appName);
+        log("等待首页按钮出现...");
+        let homeButton = textContains("首页").findOne(10000);
+        if (homeButton) {
+            homeButton.click();
+            log("已点击首页按钮");
+        } else {
+            log("未找到首页按钮");
+        }
+    }
+}
 
 // 模拟对视频不感兴趣连续滑动多次
 function simulateDislikeSwipes(durationInSeconds) {
