@@ -8,10 +8,44 @@ var height = device.height;
  var timeMax=1000
  //设置控制点极限距离
  var leaveHeightLength=100
+ // 创建悬浮窗
+let floatyWindow = floaty.window(
+    <vertical bg="#80000000" padding="10" w="300dp" h="400dp"> 
+        <vertical layout_weight="1">
+            <text id="logTitle" text="日志窗口" textColor="#FFFFFF" textSize="16sp" gravity="center" />
+            <scroll id="logScroll"> 
+                <vertical>
+                    <text id="logText" text="" textColor="#FFFFFF" textSize="14sp" />
+                </vertical>
+            </scroll>
+        </vertical>
+        <horizontal>
+            <button id="button1" text="按钮1" layout_weight="1" />
+            <button id="button2" text="按钮2" layout_weight="1" />
+        </horizontal>
+    </vertical>
+);
+
+// 设置悬浮窗位置
+floatyWindow.setPosition(10, 10);
+floatyWindow.setAdjustEnabled(true); // 允许悬浮窗自动调整位置
+
+// 日志数组，用于存储日志
+let logArray = [];
+
+// 添加日志到日志窗口
+function addLog(message) {
+    logArray.push(message);
+    if (logArray.length > 100) {
+        logArray.shift(); // 保证最多显示100行
+    }
+    floatyWindow.logText.setText(logArray.join("\n"));
+    ui.run(() => floatyWindow.logScroll.scrollTo(0, floatyWindow.logText.getHeight())); // 滚动到最新日志
+}
 //console.info
 //console.warn
 //console.error
-log("屏幕宽度: " + width + ", 屏幕高度: " + height);
+addLog("屏幕宽度: " + width + ", 屏幕高度: " + height);
 setScreenMetrics(width, height);
 // 任务队列
 let taskQueue = [];
@@ -54,40 +88,7 @@ addTask(() => {
 //     text("Chrome").findOne(1000).click();
 // }, new Date().getTime() + 1); // 10秒后执行
 
-// 创建悬浮窗
-let floatyWindow = floaty.window(
-    <vertical bg="#80000000" padding="10" w="300dp" h="400dp"> 
-        <vertical layout_weight="1">
-            <text id="logTitle" text="日志窗口" textColor="#FFFFFF" textSize="16sp" gravity="center" />
-            <scroll id="logScroll"> 
-                <vertical>
-                    <text id="logText" text="" textColor="#FFFFFF" textSize="14sp" />
-                </vertical>
-            </scroll>
-        </vertical>
-        <horizontal>
-            <button id="button1" text="按钮1" layout_weight="1" />
-            <button id="button2" text="按钮2" layout_weight="1" />
-        </horizontal>
-    </vertical>
-);
 
-// 设置悬浮窗位置
-floatyWindow.setPosition(100, 100);
-floatyWindow.setAdjustEnabled(true); // 允许悬浮窗自动调整位置
-
-// 日志数组，用于存储日志
-let logArray = [];
-
-// 添加日志到日志窗口
-function addLog(message) {
-    logArray.push(message);
-    if (logArray.length > 100) {
-        logArray.shift(); // 保证最多显示100行
-    }
-    floatyWindow.logText.setText(logArray.join("\n"));
-    ui.run(() => floatyWindow.logScroll.scrollTo(0, floatyWindow.logText.getHeight())); // 滚动到最新日志
-}
 
 // 按钮点击事件
 floatyWindow.button1.click(() => {
@@ -108,28 +109,28 @@ function watchAds() {
         let watchAdButton = textContains("看广告").findOne(1000);
         if (watchAdButton) {
             watchAdButton.click();
-            log("已点击看广告按钮");
+            addLog("已点击看广告按钮");
         } else {
-            log("未找到看广告按钮");
+            addLog("未找到看广告按钮");
             break;
         }
 
         // 等待广告播放完成
         let adDuration = random(33000, 40000); // 随机等待33~40秒
-        log(`等待广告播放完成，时长: ${adDuration} 毫秒`);
+        addLog(`等待广告播放完成，时长: ${adDuration} 毫秒`);
         sleep(adDuration);
 
         // 按键返回
         back();
-        log("已按返回键");
+        addLog("已按返回键");
 
         // 检查是否有继续观看按钮
         let continueButton = textContains("继续观看").findOne(2000);
         if (continueButton) {
             continueButton.click();
-            log("已点击继续观看按钮");
+            addLog("已点击继续观看按钮");
         } else {
-            log("未找到继续观看按钮，结束广告流程");
+            addLog("未找到继续观看按钮，结束广告流程");
             break;
         }
     }
@@ -147,29 +148,29 @@ function returnToHome(appName) {
     let packageName = app.getPackageName(appName);
 
     if (currentPackage() === packageName) {
-        log("当前在指定软件内，尝试返回首页...");
+        addLog("当前在指定软件内，尝试返回首页...");
         while (true) {
             let homeButton = textContains("首页").findOne(1000);
             if (homeButton) {
                 homeButton.click();
-                log("已点击首页按钮");
+                addLog("已点击首页按钮");
                 break;
             } else {
-                log("未找到首页按钮，尝试后退...");
+                addLog("未找到首页按钮，尝试后退...");
                 back();
                 sleep(1000);
             }
         }
     } else {
-        log("当前不在指定软件内，重启软件...");
+        addLog("当前不在指定软件内，重启软件...");
         restart(appName);
-        log("等待首页按钮出现...");
+        addLog("等待首页按钮出现...");
         let homeButton = textContains("首页").findOne(10000);
         if (homeButton) {
             homeButton.click();
-            log("已点击首页按钮");
+            addLog("已点击首页按钮");
         } else {
-            log("未找到首页按钮");
+            addLog("未找到首页按钮");
         }
     }
 }
@@ -184,16 +185,16 @@ function simulateDislikeSwipes(durationInSeconds) {
         setTimeout(() => {
             let currentTime = new Date().getTime();
             if (currentTime - startTime >= durationInMillis) {
-                log("已达到指定持续时间，停止滑动");
+                addLog("已达到指定持续时间，停止滑动");
                 return;
             }
 
             if (Math.random() < 0.5&&delay<5000) { // 20% 概率返回上一个视频
                 swipevideo(false); 
-                log(`第 ${i + 1} 次上滑完成，等待 ${delay} 毫秒`);
+                addLog(`第 ${i + 1} 次上滑完成，等待 ${delay} 毫秒`);
             } else {
                 swipevideo(true); 
-                log(`第 ${i + 1} 次滑动：`+ `，等待 ${delay} 毫秒`);
+                addLog(`第 ${i + 1} 次滑动：`+ `，等待 ${delay} 毫秒`);
             }
         }, delay * i);
     }
@@ -215,10 +216,10 @@ function signIn() {
         // 若找到签到按钮，则点击该按钮
         signInButton.click(); 
         // 记录已点击签到按钮的日志
-        log("已点击领今日奖励按钮"); 
+        addLog("已点击领今日奖励按钮"); 
     } else {
         // 若未找到签到按钮，记录未找到的日志
-        log("未找到领今日奖励按钮"); 
+        addLog("未找到领今日奖励按钮"); 
     }
 }
 
@@ -239,16 +240,16 @@ function swipevideo(b){
 }
 
 function restart(name){
-    log("重启软件执行");
+    addLog("重启软件执行");
     killApp(name);//结束
     sleep(1000);
     launchApp(name);//启动
     let packageName = app.getPackageName(name);
     while(packageName!= currentPackage()){ 
-        log("等待软件启动中...");
+        addLog("等待软件启动中...");
         sleep(1000);
     }
-    log("软件已启动");
+    addLog("软件已启动");
 }
 
 function killApp(name) {
@@ -263,23 +264,23 @@ function killApp(name) {
                 if (forcedStop.enabled()) {
                     forcedStop.click();
                     text("确定").findOne().click();
-                    log(name + "已结束运行");
+                    addLog(name + "已结束运行");
                     sleep(800);
                     back();
                     break;
                 } else {
-                    log(name + "不在后台运行！");
+                    addLog(name + "不在后台运行！");
                     back();
                     break;
                 }
             }
         }
     } else {
-        log("应用不存在");
+        addLog("应用不存在");
     }
     sleep(1000);
     home();
-    log("返回桌面");
+    addLog("返回桌面");
 }
 
 /**
