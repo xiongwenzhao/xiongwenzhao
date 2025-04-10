@@ -1,5 +1,5 @@
 auto.waitFor();
-console.show(true);
+// console.show(true);
 // 设置屏幕分辨率
 var width = device.width;
 var height = device.height;
@@ -21,6 +21,7 @@ function addTask(taskFunction, executeTime) {
     taskQueue.push({ taskFunction, executeTime });
     taskQueue.sort((a, b) => a.executeTime - b.executeTime); // 按时间排序
 }
+
 
 // 检查并执行任务
 function processTasks() {
@@ -52,6 +53,53 @@ addTask(() => {
 // addTask(() => {
 //     text("Chrome").findOne(1000).click();
 // }, new Date().getTime() + 1); // 10秒后执行
+
+// 创建悬浮窗
+let floatyWindow = floaty.window(
+    <vertical bg="#80000000" padding="10" w="300dp" h="400dp"> 
+        <vertical layout_weight="1">
+            <text id="logTitle" text="日志窗口" textColor="#FFFFFF" textSize="16sp" gravity="center" />
+            <scroll id="logScroll"> 
+                <vertical>
+                    <text id="logText" text="" textColor="#FFFFFF" textSize="14sp" />
+                </vertical>
+            </scroll>
+        </vertical>
+        <horizontal>
+            <button id="button1" text="按钮1" layout_weight="1" />
+            <button id="button2" text="按钮2" layout_weight="1" />
+        </horizontal>
+    </vertical>
+);
+
+// 设置悬浮窗位置
+floatyWindow.setPosition(100, 100);
+floatyWindow.setAdjustEnabled(true); // 允许悬浮窗自动调整位置
+
+// 日志数组，用于存储日志
+let logArray = [];
+
+// 添加日志到日志窗口
+function addLog(message) {
+    logArray.push(message);
+    if (logArray.length > 100) {
+        logArray.shift(); // 保证最多显示100行
+    }
+    floatyWindow.logText.setText(logArray.join("\n"));
+    ui.run(() => floatyWindow.logScroll.scrollTo(0, floatyWindow.logText.getHeight())); // 滚动到最新日志
+}
+
+// 按钮点击事件
+floatyWindow.button1.click(() => {
+    addLog("按钮1 被点击");
+});
+
+floatyWindow.button2.click(() => {
+    addLog("按钮2 被点击");
+});
+
+// 示例日志
+addLog("悬浮窗已创建");
 
 // 看广告流程
 function watchAds() {
