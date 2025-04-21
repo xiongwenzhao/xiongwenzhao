@@ -199,8 +199,54 @@ function simulateDislikeSwipes(durationInSeconds) {
         }, delay * i);
     }
 }
+/**
+ * 点赞视频函数
+ * 
+ * 此函数会在抖音极速版中查找“点赞”按钮并点击。
+ * 如果找到按钮，则点击并记录日志；如果未找到，则记录未找到的日志。
+ */
+function likeVideo() {
+    let likeButton = descContains("未点赞").findOne(1000); // 查找未点赞的按钮
+    if (likeButton) {
+        likeButton.click(); // 点击点赞按钮
+        addLog("已点赞视频");
+    } else {
+        addLog("未找到点赞按钮");
+    }
+}
+/**
+ * 评论视频函数
+ * 
+ * 此函数会在抖音极速版中查找评论输入框，输入指定评论内容并发送。
+ * 如果找到输入框，则输入评论并记录日志；如果未找到，则记录未找到的日志。
+ * 
+ * @param {string} commentText - 要发送的评论内容
+ */
+function commentVideo(commentText) {
+    let commentButton = descContains("评论").findOne(1000); // 查找评论按钮
+    if (commentButton) {
+        commentButton.click(); // 点击评论按钮
+        addLog("已点击评论按钮");
 
+        let inputField = className("EditText").findOne(2000); // 查找评论输入框
+        if (inputField) {
+            inputField.setText(commentText); // 输入评论内容
+            addLog("已输入评论内容: " + commentText);
 
+            let sendButton = textContains("发送").findOne(1000); // 查找发送按钮
+            if (sendButton) {
+                sendButton.click(); // 点击发送按钮
+                addLog("已发送评论");
+            } else {
+                addLog("未找到发送按钮");
+            }
+        } else {
+            addLog("未找到评论输入框");
+        }
+    } else {
+        addLog("未找到评论按钮");
+    }
+}
 /**
  * 查找并点击领今日奖励按钮的函数
  * 此函数尝试在屏幕上查找包含“领今日奖励”文本的按钮，并点击它。
