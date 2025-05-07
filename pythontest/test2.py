@@ -2,6 +2,7 @@ import time
 from pywinauto.application import Application
 from pywinauto.keyboard import send_keys
 from pywinauto.timings import TimeoutError
+import random
 
 def connect_to_wechat():
     try:
@@ -10,7 +11,7 @@ def connect_to_wechat():
     except Exception as e:
         print(f"连接微信应用时出错: {e}")
         return None
-
+        
 def find_window(app, title):
     try:
         window = app.window(title=title)
@@ -78,5 +79,9 @@ def add_friends_from_group():
     add_friend_from_group(main_window)
 
 if __name__ == "__main__":
+    print(random.randint(30000,40000)/1000)
+    count = 0
+    print(count)
+    count += 1
     add_friends_from_group()
     

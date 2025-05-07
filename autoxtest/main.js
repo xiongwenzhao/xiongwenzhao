@@ -58,13 +58,23 @@ function addTask(taskFunction, executeTime) {
 
 
 // 检查并执行任务
+/**
+ * 处理任务队列中的任务。
+ * 该函数会检查任务队列中是否有到期的任务，如果有则依次执行这些任务。
+ * 执行过程中如果出现错误，会将错误信息输出到控制台。
+ */
 function processTasks() {
+    // 获取当前时间的时间戳
     let now = new Date().getTime();
+    // 当任务队列不为空且队列中第一个任务的执行时间小于等于当前时间时，循环执行任务
     while (taskQueue.length > 0 && taskQueue[0].executeTime <= now) {
-        let task = taskQueue.shift(); // 取出队列中的第一个任务
+        // 从任务队列中取出第一个任务
+        let task = taskQueue.shift(); 
         try {
-            task.taskFunction(); // 执行任务
+            // 执行取出的任务
+            task.taskFunction(); 
         } catch (error) {
+            // 若任务执行失败，将错误信息输出到控制台
             console.error("任务执行失败:", error);
         }
     }

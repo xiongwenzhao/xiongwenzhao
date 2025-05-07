@@ -22,3 +22,4 @@ if __name__ == "__main__":
         disable_windows_update()
     else:
         print("This script must be run as an administrator.")
+        
